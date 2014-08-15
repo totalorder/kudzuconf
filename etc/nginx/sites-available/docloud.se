@@ -1,0 +1,15 @@
+
+server {
+	listen localhost:8080;
+	#listen [::]:80 ipv6only=on;
+
+	root /srv/docloud.se/htdocs;
+	index index.html index.htm;
+
+	# Make site accessible from http://localhost/
+	server_name docloud.se;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+}

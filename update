@@ -1,0 +1,25 @@
+#!/bin/bash
+mkdir -p etc/nginx
+cp /etc/nginx/nginx.conf  etc/nginx/
+
+mkdir -p etc/nginx/sites-available/
+cp /etc/nginx/sites-available/*  etc/nginx/sites-available/
+
+mkdir -p etc/varnish
+cp /etc/varnish/default.vcl  etc/varnish/
+
+mkdir -p deadlock.se/27proxy
+cp ../deadlock.se/27proxy/supervisor.kudzu.conf  deadlock.se/27proxy
+
+mkdir -p deadlock.se/bilder
+cp ../deadlock.se/bilder/supervisor.kudzu.conf  deadlock.se/bilder
+
+mkdir -p deadlock.se/django
+cp ../deadlock.se/django/supervisor.kudzu.conf  deadlock.se/django
+
+mkdir -p deadlock.se/fpejl
+cp ../deadlock.se/fpejl/supervisor.kudzu.conf  deadlock.se/fpejl
+
+mkdir -p deadlock.se/websockthat
+cp ../deadlock.se/websockthat/supervisor.achtung.kudzu.conf  deadlock.se/websockthat
+cp ../deadlock.se/websockthat/supervisor.pong.kudzu.conf  deadlock.se/websockthat

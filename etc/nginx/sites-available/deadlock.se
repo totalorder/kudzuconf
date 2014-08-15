@@ -1,0 +1,76 @@
+# the upstream component nginx needs to connect to
+#upstream deadlock_django {
+    #server unix:///srv/oddbike.se/run/oddbike.sock; # for a file socket
+#    server 127.0.0.1:6081; # for a web port socket (we'll use this first)
+#}
+
+# configuration of the server
+server {
+    port_in_redirect off;
+    # the port your site will be served on
+    listen      localhost:8080;
+    # the domain name it will serve for
+    server_name deadlock.se; # substitute your machine's IP address or FQDN
+    charset     utf-8;
+
+    # max upload size
+    #client_max_body_size 75M;   # adjust to taste
+
+    location /files {
+        alias /home/anton/deadlock.se/files/;
+    }
+
+    # Achtung
+    location ~ ^/achtung[/]?$ {
+        return 302 /achtung/play/;
+    }
+    location /achtung/play {
+	alias /home/anton/deadlock.se/websockthat/achtung/;
+    }
+    location /achtung {
+	alias /home/anton/deadlock.se/websockthat/;
+    }
+
+    # Pong
+    location ~ ^/pong[/]?$ {
+        return 302 /pong/play/;
+    }
+    location /pong/play {
+	alias /home/anton/deadlock.se/websockthat/pong/;
+    }
+    location /pong {
+	alias /home/anton/deadlock.se/websockthat/;
+    }
+    
+    # Fpejl
+    location /fordomsquiz/api {
+        rewrite ^/fordomsquiz/api(.*)$ $1 break;
+	proxy_pass  http://localhost:9002;
+    }
+    location /fordomsquiz {
+        alias /home/anton/deadlock.se/fpejl/app/;
+    }    
+    
+
+    # Django media
+    location /media  {
+        alias /home/anton/deadlock.se/django/media;  # your Django project's media files - amend as required
+	#autoindex on;
+    }
+
+    location /static {
+        alias /home/anton/deadlock.se/django/static_root; # your Django project's static files - amend as required
+	#autoindex on;
+    }
+	
+    location ~ ^/$ {
+        return 302 /blog/;
+    } 
+    # Finally, send all non-media requests to the Django server.
+    location / {
+	proxy_pass  http://localhost:9001;
+        #uwsgi_pass  deadlock_django;
+        #include     /home/anton/deadlock.se/uwsgi_params; # the uwsgi_params file you installed
+    }
+}
+

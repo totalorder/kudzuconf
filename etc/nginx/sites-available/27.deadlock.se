@@ -1,0 +1,23 @@
+# the upstream component nginx needs to connect to
+#upstream deadlock_django {
+    #server unix:///srv/oddbike.se/run/oddbike.sock; # for a file socket
+#    server 127.0.0.1:6081; # for a web port socket (we'll use this first)
+#}
+
+# configuration of the server
+server {
+    # the port your site will be served on
+    listen      localhost:8080;
+    # the domain name it will serve for
+    server_name 27.deadlock.se; # substitute your machine's IP address or FQDN
+    charset     utf-8;
+
+    # max upload size
+    #client_max_body_size 75M;   # adjust to taste
+
+    # Finally, send all non-media requests to the Django server.
+    location / {
+	proxy_pass  http://localhost:2700;
+    }
+}
+
